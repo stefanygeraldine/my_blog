@@ -12,6 +12,7 @@ class PostModelViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializers
     queryset = Post.objects.all()
+    #http_methods_names = ['get']
 
 # class PostApiView(APIView):
 # def get(self, request):
