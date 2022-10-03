@@ -10,8 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
 import datetime
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")
+print(ENVIRONMENT)
+IN_DEV = ENVIRONMENT == "development"
+IN_STAGING = ENVIRONMENT == "staging"
+IN_PROD = ENVIRONMENT == "production"
+
+
+def _env_get_required(setting_name):
+
+    """Get the value of an environment variable and assert that it is set."""
+    setting = os.environ.get(setting_name, "")
+    print('AAAAAA', setting)
+    if IN_STAGING or IN_PROD:
+        assert setting not in {None, ""}, "{0} must be defined as an environment variable.".format(setting_name)
+    return setting
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +43,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=vqw487div!3bn4hgbxt^0t81_yo1-@o6_7&efx#c*^zrw61(@'
+SECRET_KEY = _env_get_required("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
